@@ -31,6 +31,7 @@ set(KERNEL_SOURCES
     ConsoleDevice.cpp
     CoreDump.cpp
     DMI.cpp
+    SanCov.cpp
     Devices/AsyncDeviceRequest.cpp
     Devices/BlockDevice.cpp
     Devices/CharacterDevice.cpp
@@ -336,6 +337,9 @@ endif()
 if ("${SERENITY_ARCH}" STREQUAL "x86_64")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mcmodel=large -mno-red-zone")
 endif()
+
+# Kernel Coverarge (KCOV)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize-coverage=trace-pc")
 
 # Kernel Undefined Behavior Sanitizer (KUBSAN)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=undefined")
