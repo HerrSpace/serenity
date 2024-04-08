@@ -15,9 +15,6 @@
 #include <Kernel/Interrupts/InterruptDisabler.h>
 #include <Kernel/Security/Credentials.h>
 #include <Kernel/Tasks/Coredump.h>
-#ifdef ENABLE_KERNEL_COVERAGE_COLLECTION
-#    include <Kernel/Devices/KCOVDevice.h>
-#endif
 #include <Kernel/API/POSIX/errno.h>
 #include <Kernel/API/POSIX/sys/limits.h>
 #include <Kernel/Arch/PageDirectory.h>
@@ -561,6 +558,20 @@ void Process::crash(int signal, Optional<RegisterState const&> regs, bool out_of
     VERIFY_NOT_REACHED();
 }
 
+#ifdef ENABLE_KERNEL_COVERAGE_COLLECTION
+bool Process::is_kcov_busy() {
+    bool is_busy = false;
+    Kernel::Process::current().for_each_thread([&](auto& thread) {
+        if (thread.m_kcov_enabled) {
+            is_busy = true;
+            return IterationDecision::Break;
+        }    
+        return IterationDecision::Continue;
+    });
+    return is_busy;
+}
+#endif
+
 RefPtr<Process> Process::from_pid_in_same_jail(ProcessID pid)
 {
     return Process::current().m_jail_process_list.with([&](auto const& list_ptr) -> RefPtr<Process> {
@@ -964,9 +975,6 @@ void Process::die()
     });
 
     kill_all_threads();
-#ifdef ENABLE_KERNEL_COVERAGE_COLLECTION
-    KCOVDevice::free_process();
-#endif
 }
 
 void Process::terminate_due_to_signal(u8 signal)
