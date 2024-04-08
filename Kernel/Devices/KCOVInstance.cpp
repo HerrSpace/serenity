@@ -37,7 +37,7 @@ ErrorOr<void> KCOVInstance::buffer_allocate(size_t buffer_size_in_entries)
     return {};
 }
 
-void KCOVInstance::buffer_add_pc(u64 pc)
+NO_SANITIZE_COVERAGE void KCOVInstance::buffer_add_pc(u64 pc)
 {
     auto idx = (u64)m_buffer[0];
     if (idx >= m_buffer_size_in_entries) {
