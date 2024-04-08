@@ -402,6 +402,10 @@ if [[ "$CMD" =~ ^(build|install|image|copy-src|run|gdb|test|rebuild|recreate|kad
                 if [ -n "${CMD_ARGS[0]}" ]; then
                     export SERENITY_KERNEL_CMDLINE="${CMD_ARGS[0]}"
                 fi
+                # We need to make sure qemu doesn't start until we continue in gdb
+                export SERENITY_EXTRA_QEMU_ARGS="${SERENITY_EXTRA_QEMU_ARGS} -d int -no-reboot -no-shutdown -S"
+                # We need to disable kaslr to let gdb map the kernel symbols correctly
+                export SERENITY_KERNEL_CMDLINE="${SERENITY_KERNEL_CMDLINE} disable_kaslr"
                 build_target run
             fi
             ;;

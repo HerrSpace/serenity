@@ -13,8 +13,6 @@ die() {
 
 if [ "$(uname -s)" = "SerenityOS" ]; then
     SUDO="pls -E"
-elif command -v sudo >/dev/null; then
-    SUDO="sudo -E"
 elif command -v doas >/dev/null; then
     if [ "$SUDO_UID" = '' ]; then
         SUDO_UID=$(id -u)

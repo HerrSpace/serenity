@@ -666,7 +666,8 @@ def set_up_gdb(config: Configuration):
 
     if config.enable_gdb:
         config.extra_arguments.extend(["-gdb", f"tcp:{config.host_ip}:1234"])
-
+        config.extra_arguments.extend(["-d", "int", "-no-reboot", "-no-shutdown"])
+        # config.extra_arguments.extend(["-S"])
 
 def set_up_network_hardware(config: Configuration):
     config.packet_logging_arguments = (environ.get("SERENITY_PACKET_LOGGING_ARG", "")).split()

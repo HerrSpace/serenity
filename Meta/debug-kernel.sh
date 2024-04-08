@@ -55,7 +55,7 @@ else
     gdb_host=${SERENITY_HOST_IP:-127.0.0.1}
 fi
 
-
+source /home/space/repos/pwndbg/.venv/bin/activate
 exec $SERENITY_KERNEL_DEBUGGER \
     -ex "file $SCRIPT_DIR/../Build/${SERENITY_ARCH:-x86_64}$toolchain_suffix/Kernel/Prekernel/$prekernel_image" \
     -ex "set confirm off" \
@@ -67,6 +67,4 @@ exec $SERENITY_KERNEL_DEBUGGER \
     -ex "set print asm-demangle on" \
     -ex "target remote ${gdb_host}:1234" \
     -ex "source $SCRIPT_DIR/serenity_gdb.py" \
-    -ex "layout asm" \
-    -ex "fs next" \
     "$@"
